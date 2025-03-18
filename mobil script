@@ -2221,7 +2221,7 @@ Toggle:OnChanged(function(state)
                 game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
                 
                              -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
+                wait(120)  -- Adjust the interval as needed
             end
         end
     else
@@ -2251,7 +2251,7 @@ Toggle:OnChanged(function(state)
                 game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
                 
                              -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
+                wait(120)  -- Adjust the interval as needed
             end
         end
     else
@@ -2281,7 +2281,7 @@ Toggle:OnChanged(function(state)
                 game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
                 
                              -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
+                wait(120)  -- Adjust the interval as needed
             end
         end
     else
@@ -2311,7 +2311,7 @@ Toggle:OnChanged(function(state)
                 game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
                 
                              -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
+                wait(120)  -- Adjust the interval as needed
             end
         end
     else
@@ -2341,7 +2341,7 @@ Toggle:OnChanged(function(state)
                 game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("LimitedMerchantService"):WaitForChild("RF"):WaitForChild("BuyItem"):InvokeServer(unpack(args))
                 
                              -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
+                wait(120)  -- Adjust the interval as needed
             end
         end
     else
