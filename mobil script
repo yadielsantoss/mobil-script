@@ -2191,7 +2191,7 @@ Toggle:OnChanged(function(state)
                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-10949.7832, 63.7595329, 5928.90137, 1, 0, 0, 0, 1, 0, 0, 0, 1)
 wait()
                 -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
+                wait(620)  -- Adjust the interval as needed
             end
         end
     else
