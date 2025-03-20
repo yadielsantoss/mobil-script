@@ -13,7 +13,6 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-    Inf = Window:AddTab({ Title = "Inf", Icon = "" }),
     New = Window:AddTab({ Title = "New", Icon = "" }),
     Update = Window:AddTab({ Title = "Update", Icon = "" }),
     Iamrich = Window:AddTab({ Title = "Iamrich", Icon = "" }),
@@ -23,12 +22,9 @@ local Tabs = {
     Cherise = Window:AddTab({ Title = "Cherise part", Icon = "" }),
     ZE = Window:AddTab({ Title = "ZE part", Icon = "" }),
     Misc = Window:AddTab({ Title = "Misc", Icon = "" }),
+    Mutate = Window:AddTab({ Title = "mutate,cosmic", Icon = "" }),
 }
 
-Tabs.Inf:AddParagraph({
-    Title = "Every person had they own script",
-    Content = "yall can use othe person script"
-})
 
 local Toggle = Tabs.Jean:AddToggle("STRENGTH", {Title = "GhostPirate Egg", Default = false})
 
@@ -2375,3 +2371,536 @@ Tabs.New:AddButton({
         ab.Text="Roblox tried to kick u but i kicked him instead"wait(2)ab.Text="Status : Active"end)
     end
 })
+
+Tabs.Mutate:AddParagraph({
+    Title = "This is for cure",
+    Content = "If u selet the Ghost it will  cure all pet but no the Ghost"
+})
+
+Tabs.Mutate:AddParagraph({
+    Title = "so use the one is Rainbow,Ghost,Cosmic it will cure all pet but no the one u selet",
+    Content = ""
+})
+
+local Toggle = Tabs.Mutate:AddToggle("MyToggle", {Title = "Mutate", Default = false})
+
+-- Reference to services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+local mutateRF = PetCombineService:WaitForChild("RF"):WaitForChild("mutate")
+
+-- Function to automatically mutate pets
+local function autoMutatePets()
+    -- Get the pet container from the player's UI
+    local player = game.Players.LocalPlayer
+    local petsContainer = player.PlayerGui.GameUI.Menus.Mutate.Container.Left.Pets
+
+    -- Loop through all pet UI elements inside the container
+    for _, petUI in ipairs(petsContainer:GetChildren()) do
+        -- Get the pet name from the pet UI element
+        local petName = petUI.Name
+
+        -- Make sure the pet name exists
+        if petName then
+            -- Assuming pet names are mapped directly to pet IDs (you may need to adjust this logic if needed)
+            local petId = petName  -- Adjust this if necessary to map the pet name to a unique ID
+
+            -- Create the arguments for the mutate function
+            local args = {
+                [1] = petId,  -- The pet ID
+                [2] = {}      -- An empty table as the second argument
+            }
+
+            -- Invoke the mutate function on the server
+            mutateRF:InvokeServer(unpack(args))
+            print("Mutating pet: " .. petId)  -- Debug message to confirm the pet is being mutated
+        end
+    end
+end
+
+-- Variable to check if the toggle is on
+local isToggleOn = Toggle.Value
+
+-- Loop when toggle is on
+Toggle:OnChanged(function()
+    -- Check if the toggle is on
+    if Toggle.Value then
+        isToggleOn = true
+        -- Run a loop to auto mutate pets every 1 second
+        while isToggleOn do
+            autoMutatePets()
+            wait(1)  -- Delay of 1 second
+        end
+    else
+        -- If toggle is off, stop the loop
+        isToggleOn = false
+    end
+end)
+
+
+
+local Toggle = Tabs.Mutate:AddToggle("hi", {Title = "Rainbow,Ghost", Default = false})
+
+local running = false
+
+Toggle:OnChanged(function(isToggled)
+    -- Start checking when toggle is on
+    if isToggled and not running then
+        running = true
+        while running do
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local petsFrame = localPlayer.PlayerGui.GameUI.Menus.Cure.Container.Left.Pets
+
+            -- Function to check if a pet should be cured
+            local function shouldCurePet(pet)
+                local petToggle = pet:FindFirstChild("Toggle")
+                if petToggle then
+                    -- Check attributes
+                    for attrName, attrValue in pairs(petToggle:GetAttributes()) do
+                        if attrName == "Cure" and (attrValue == "Rainbow" or attrValue == "Ghost" or attrValue == ".") then
+                            print("Skipping pet:", pet.Name, "because Cure =", attrValue)
+                            return false -- Skip this pet
+                        end
+                    end
+                end
+                return true -- Pet should be cured
+            end
+
+            -- Function to auto-cure pets
+            local function autoCurePets()
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+                local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+                local cureRF = PetCombineService:WaitForChild("RF"):WaitForChild("cure")
+
+                for _, pet in pairs(petsFrame:GetChildren()) do
+                    if pet:IsA("Frame") or pet:IsA("Folder") then -- Ensure it's a valid UI container
+                        print("Pet Name:", pet.Name)
+
+                        if shouldCurePet(pet) then
+                            -- Attempt to cure the pet
+                            local args = { [1] = pet.Name } -- Assuming the pet ID is the name, adjust if necessary
+                            cureRF:InvokeServer(unpack(args))
+                            print("Curing pet:", pet.Name)
+                        end
+                    end
+                end
+            end
+
+            -- Call the function to auto-cure pets
+            autoCurePets()
+
+            -- Wait 1 second before checking again
+            wait(1)
+
+            -- Check if the toggle is off to stop the loop
+            if not Toggle.Value then
+                running = false
+            end
+        end
+    elseif not isToggled and running then
+        -- Stop the loop if toggle is turned off
+        running = false
+    end
+end)
+
+local Toggle = Tabs.Mutate:AddToggle("hi", {Title = "Rainbow,Ghost,Cosmic", Default = false})
+
+local running = false
+
+Toggle:OnChanged(function(isToggled)
+    -- Start checking when toggle is on
+    if isToggled and not running then
+        running = true
+        while running do
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local petsFrame = localPlayer.PlayerGui.GameUI.Menus.Cure.Container.Left.Pets
+
+            -- Function to check if a pet should be cured
+            local function shouldCurePet(pet)
+                local petToggle = pet:FindFirstChild("Toggle")
+                if petToggle then
+                    -- Check attributes
+                    for attrName, attrValue in pairs(petToggle:GetAttributes()) do
+                        if attrName == "Cure" and (attrValue == "Rainbow" or attrValue == "Ghost" or attrValue == "Cosmic") then
+                            print("Skipping pet:", pet.Name, "because Cure =", attrValue)
+                            return false -- Skip this pet
+                        end
+                    end
+                end
+                return true -- Pet should be cured
+            end
+
+            -- Function to auto-cure pets
+            local function autoCurePets()
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+                local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+                local cureRF = PetCombineService:WaitForChild("RF"):WaitForChild("cure")
+
+                for _, pet in pairs(petsFrame:GetChildren()) do
+                    if pet:IsA("Frame") or pet:IsA("Folder") then -- Ensure it's a valid UI container
+                        print("Pet Name:", pet.Name)
+
+                        if shouldCurePet(pet) then
+                            -- Attempt to cure the pet
+                            local args = { [1] = pet.Name } -- Assuming the pet ID is the name, adjust if necessary
+                            cureRF:InvokeServer(unpack(args))
+                            print("Curing pet:", pet.Name)
+                        end
+                    end
+                end
+            end
+
+            -- Call the function to auto-cure pets
+            autoCurePets()
+
+            -- Wait 1 second before checking again
+            wait(1)
+
+            -- Check if the toggle is off to stop the loop
+            if not Toggle.Value then
+                running = false
+            end
+        end
+    elseif not isToggled and running then
+        -- Stop the loop if toggle is turned off
+        running = false
+    end
+end)
+
+local Toggle = Tabs.Mutate:AddToggle("hi", {Title = "Ghost,Cosmic", Default = false})
+
+local running = false
+
+Toggle:OnChanged(function(isToggled)
+    -- Start checking when toggle is on
+    if isToggled and not running then
+        running = true
+        while running do
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local petsFrame = localPlayer.PlayerGui.GameUI.Menus.Cure.Container.Left.Pets
+
+            -- Function to check if a pet should be cured
+            local function shouldCurePet(pet)
+                local petToggle = pet:FindFirstChild("Toggle")
+                if petToggle then
+                    -- Check attributes
+                    for attrName, attrValue in pairs(petToggle:GetAttributes()) do
+                        if attrName == "Cure" and (attrValue == "" or attrValue == "Ghost" or attrValue == "Cosmic") then
+                            print("Skipping pet:", pet.Name, "because Cure =", attrValue)
+                            return false -- Skip this pet
+                        end
+                    end
+                end
+                return true -- Pet should be cured
+            end
+
+            -- Function to auto-cure pets
+            local function autoCurePets()
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+                local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+                local cureRF = PetCombineService:WaitForChild("RF"):WaitForChild("cure")
+
+                for _, pet in pairs(petsFrame:GetChildren()) do
+                    if pet:IsA("Frame") or pet:IsA("Folder") then -- Ensure it's a valid UI container
+                        print("Pet Name:", pet.Name)
+
+                        if shouldCurePet(pet) then
+                            -- Attempt to cure the pet
+                            local args = { [1] = pet.Name } -- Assuming the pet ID is the name, adjust if necessary
+                            cureRF:InvokeServer(unpack(args))
+                            print("Curing pet:", pet.Name)
+                        end
+                    end
+                end
+            end
+
+            -- Call the function to auto-cure pets
+            autoCurePets()
+
+            -- Wait 1 second before checking again
+            wait(1)
+
+            -- Check if the toggle is off to stop the loop
+            if not Toggle.Value then
+                running = false
+            end
+        end
+    elseif not isToggled and running then
+        -- Stop the loop if toggle is turned off
+        running = false
+    end
+end)
+
+local Toggle = Tabs.Mutate:AddToggle("hi", {Title = "Rainbow", Default = false})
+
+local running = false
+
+Toggle:OnChanged(function(isToggled)
+    -- Start checking when toggle is on
+    if isToggled and not running then
+        running = true
+        while running do
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local petsFrame = localPlayer.PlayerGui.GameUI.Menus.Cure.Container.Left.Pets
+
+            -- Function to check if a pet should be cured
+            local function shouldCurePet(pet)
+                local petToggle = pet:FindFirstChild("Toggle")
+                if petToggle then
+                    -- Check attributes
+                    for attrName, attrValue in pairs(petToggle:GetAttributes()) do
+                        if attrName == "Cure" and (attrValue == "Rainbow" or attrValue == "." or attrValue == ".") then
+                            print("Skipping pet:", pet.Name, "because Cure =", attrValue)
+                            return false -- Skip this pet
+                        end
+                    end
+                end
+                return true -- Pet should be cured
+            end
+
+            -- Function to auto-cure pets
+            local function autoCurePets()
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+                local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+                local cureRF = PetCombineService:WaitForChild("RF"):WaitForChild("cure")
+
+                for _, pet in pairs(petsFrame:GetChildren()) do
+                    if pet:IsA("Frame") or pet:IsA("Folder") then -- Ensure it's a valid UI container
+                        print("Pet Name:", pet.Name)
+
+                        if shouldCurePet(pet) then
+                            -- Attempt to cure the pet
+                            local args = { [1] = pet.Name } -- Assuming the pet ID is the name, adjust if necessary
+                            cureRF:InvokeServer(unpack(args))
+                            print("Curing pet:", pet.Name)
+                        end
+                    end
+                end
+            end
+
+            -- Call the function to auto-cure pets
+            autoCurePets()
+
+            -- Wait 1 second before checking again
+            wait(1)
+
+            -- Check if the toggle is off to stop the loop
+            if not Toggle.Value then
+                running = false
+            end
+        end
+    elseif not isToggled and running then
+        -- Stop the loop if toggle is turned off
+        running = false
+    end
+end)
+
+local Toggle = Tabs.Mutate:AddToggle("hi", {Title = "Ghost", Default = false})
+
+local running = false
+
+Toggle:OnChanged(function(isToggled)
+    -- Start checking when toggle is on
+    if isToggled and not running then
+        running = true
+        while running do
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local petsFrame = localPlayer.PlayerGui.GameUI.Menus.Cure.Container.Left.Pets
+
+            -- Function to check if a pet should be cured
+            local function shouldCurePet(pet)
+                local petToggle = pet:FindFirstChild("Toggle")
+                if petToggle then
+                    -- Check attributes
+                    for attrName, attrValue in pairs(petToggle:GetAttributes()) do
+                        if attrName == "Cure" and (attrValue == "Ghost" or attrValue == "." or attrValue == ".") then
+                            print("Skipping pet:", pet.Name, "because Cure =", attrValue)
+                            return false -- Skip this pet
+                        end
+                    end
+                end
+                return true -- Pet should be cured
+            end
+
+            -- Function to auto-cure pets
+            local function autoCurePets()
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+                local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+                local cureRF = PetCombineService:WaitForChild("RF"):WaitForChild("cure")
+
+                for _, pet in pairs(petsFrame:GetChildren()) do
+                    if pet:IsA("Frame") or pet:IsA("Folder") then -- Ensure it's a valid UI container
+                        print("Pet Name:", pet.Name)
+
+                        if shouldCurePet(pet) then
+                            -- Attempt to cure the pet
+                            local args = { [1] = pet.Name } -- Assuming the pet ID is the name, adjust if necessary
+                            cureRF:InvokeServer(unpack(args))
+                            print("Curing pet:", pet.Name)
+                        end
+                    end
+                end
+            end
+
+            -- Call the function to auto-cure pets
+            autoCurePets()
+
+            -- Wait 1 second before checking again
+            wait(1)
+
+            -- Check if the toggle is off to stop the loop
+            if not Toggle.Value then
+                running = false
+            end
+        end
+    elseif not isToggled and running then
+        -- Stop the loop if toggle is turned off
+        running = false
+    end
+end)
+
+
+local Toggle = Tabs.Mutate:AddToggle("hi", {Title = "Cosmic", Default = false})
+
+local running = false
+
+Toggle:OnChanged(function(isToggled)
+    -- Start checking when toggle is on
+    if isToggled and not running then
+        running = true
+        while running do
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local petsFrame = localPlayer.PlayerGui.GameUI.Menus.Cure.Container.Left.Pets
+
+            -- Function to check if a pet should be cured
+            local function shouldCurePet(pet)
+                local petToggle = pet:FindFirstChild("Toggle")
+                if petToggle then
+                    -- Check attributes
+                    for attrName, attrValue in pairs(petToggle:GetAttributes()) do
+                        if attrName == "Cure" and (attrValue == "Cosmic" or attrValue == "." or attrValue == ".") then
+                            print("Skipping pet:", pet.Name, "because Cure =", attrValue)
+                            return false -- Skip this pet
+                        end
+                    end
+                end
+                return true -- Pet should be cured
+            end
+
+            -- Function to auto-cure pets
+            local function autoCurePets()
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+                local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+                local cureRF = PetCombineService:WaitForChild("RF"):WaitForChild("cure")
+
+                for _, pet in pairs(petsFrame:GetChildren()) do
+                    if pet:IsA("Frame") or pet:IsA("Folder") then -- Ensure it's a valid UI container
+                        print("Pet Name:", pet.Name)
+
+                        if shouldCurePet(pet) then
+                            -- Attempt to cure the pet
+                            local args = { [1] = pet.Name } -- Assuming the pet ID is the name, adjust if necessary
+                            cureRF:InvokeServer(unpack(args))
+                            print("Curing pet:", pet.Name)
+                        end
+                    end
+                end
+            end
+
+            -- Call the function to auto-cure pets
+            autoCurePets()
+
+            -- Wait 1 second before checking again
+            wait(1)
+
+            -- Check if the toggle is off to stop the loop
+            if not Toggle.Value then
+                running = false
+            end
+        end
+    elseif not isToggled and running then
+        -- Stop the loop if toggle is turned off
+        running = false
+    end
+end)
+
+
+
+local Toggle = Tabs.Mutate:AddToggle("hi", {Title = "Glowing", Default = false})
+
+local running = false
+
+Toggle:OnChanged(function(isToggled)
+    -- Start checking when toggle is on
+    if isToggled and not running then
+        running = true
+        while running do
+            local players = game:GetService("Players")
+            local localPlayer = players.LocalPlayer
+            local petsFrame = localPlayer.PlayerGui.GameUI.Menus.Cure.Container.Left.Pets
+
+            -- Function to check if a pet should be cured
+            local function shouldCurePet(pet)
+                local petToggle = pet:FindFirstChild("Toggle")
+                if petToggle then
+                    -- Check attributes
+                    for attrName, attrValue in pairs(petToggle:GetAttributes()) do
+                        if attrName == "Cure" and (attrValue == "Glowing" or attrValue == "." or attrValue == ".") then
+                            print("Skipping pet:", pet.Name, "because Cure =", attrValue)
+                            return false -- Skip this pet
+                        end
+                    end
+                end
+                return true -- Pet should be cured
+            end
+
+            -- Function to auto-cure pets
+            local function autoCurePets()
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Knit = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+                local PetCombineService = Knit:WaitForChild("Services"):WaitForChild("PetCombineService")
+                local cureRF = PetCombineService:WaitForChild("RF"):WaitForChild("cure")
+
+                for _, pet in pairs(petsFrame:GetChildren()) do
+                    if pet:IsA("Frame") or pet:IsA("Folder") then -- Ensure it's a valid UI container
+                        print("Pet Name:", pet.Name)
+
+                        if shouldCurePet(pet) then
+                            -- Attempt to cure the pet
+                            local args = { [1] = pet.Name } -- Assuming the pet ID is the name, adjust if necessary
+                            cureRF:InvokeServer(unpack(args))
+                            print("Curing pet:", pet.Name)
+                        end
+                    end
+                end
+            end
+
+            -- Call the function to auto-cure pets
+            autoCurePets()
+
+            -- Wait 1 second before checking again
+            wait(1)
+
+            -- Check if the toggle is off to stop the loop
+            if not Toggle.Value then
+                running = false
+            end
+        end
+    elseif not isToggled and running then
+        -- Stop the loop if toggle is turned off
+        running = false
+    end
+end)
