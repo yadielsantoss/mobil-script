@@ -23,6 +23,7 @@ local Tabs = {
     ZE = Window:AddTab({ Title = "ZE part", Icon = "" }),
     Misc = Window:AddTab({ Title = "Misc", Icon = "" }),
     Mutate = Window:AddTab({ Title = "mutate,cosmic", Icon = "" }),
+    Lock = Window:AddTab({ Title = "Lock,Unlock", Icon = "" }),
 }
 
 
@@ -2372,6 +2373,52 @@ Tabs.New:AddButton({
     end
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Tabs.Mutate:AddParagraph({
     Title = "This is for cure",
     Content = "If u selet the Ghost it will  cure all pet but no the Ghost"
@@ -2902,5 +2949,354 @@ Toggle:OnChanged(function(isToggled)
     elseif not isToggled and running then
         -- Stop the loop if toggle is turned off
         running = false
+    end
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Tabs.Lock:AddButton({
+    Title = "Lock all pet",
+    Description = "All your pets will be locked, but you won’t see the 🔒",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                if lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+    end
+})
+
+
+local isRunning = false -- Variable to control the loop
+
+local Toggle = Tabs.Lock:AddToggle("MyToggle", {Title = "Glowing", Default = false })
+
+Toggle:OnChanged(function(state)
+    isRunning = state -- Update the loop control variable
+
+    while isRunning do
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local cureAttribute = toggleButton:GetAttribute("Cure")
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                if cureAttribute == "Glowing" and lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+
+        wait(0) -- Add a small delay to prevent excessive requests
+    end
+end)
+
+local isRunning = false -- Variable to control the loop
+
+local Toggle = Tabs.Lock:AddToggle("MyToggle", {Title = "Rainbow", Default = false })
+
+Toggle:OnChanged(function(state)
+    isRunning = state -- Update the loop control variable
+
+    while isRunning do
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local cureAttribute = toggleButton:GetAttribute("Cure")
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                if cureAttribute == "Rainbow" and lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+
+        wait(0) -- Add a small delay to prevent excessive requests
+    end
+end)
+
+
+local isRunning = false -- Variable to control the loop
+
+local Toggle = Tabs.Lock:AddToggle("MyToggle", {Title = "Ghost", Default = false })
+
+Toggle:OnChanged(function(state)
+    isRunning = state -- Update the loop control variable
+
+    while isRunning do
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+        local validCures = { ["Ghost"] = true, ["."] = true, ["."] = true } -- Allowed attributes
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local cureAttribute = toggleButton:GetAttribute("Cure")
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                -- Check if Cure is in the allowed list and if pet is not already locked
+                if validCures[cureAttribute] and lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+
+        wait(0) -- Small delay to prevent excessive requests
+    end
+end)
+
+local isRunning = false -- Variable to control the loop
+
+local Toggle = Tabs.Lock:AddToggle("MyToggle", {Title = "Cosmic", Default = false })
+
+Toggle:OnChanged(function(state)
+    isRunning = state -- Update the loop control variable
+
+    while isRunning do
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+        local validCures = { ["Cosmic"] = true, ["."] = true, ["."] = true } -- Allowed attributes
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local cureAttribute = toggleButton:GetAttribute("Cure")
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                -- Check if Cure is in the allowed list and if pet is not already locked
+                if validCures[cureAttribute] and lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+
+        wait(0) -- Small delay to prevent excessive requests
+    end
+end)
+
+
+local isRunning = false -- Variable to control the loop
+
+local Toggle = Tabs.Lock:AddToggle("MyToggle", {Title = "Glowing,Rainbow,Cosmic,Ghost", Default = false })
+
+Toggle:OnChanged(function(state)
+    isRunning = state -- Update the loop control variable
+
+    while isRunning do
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+        local validCures = { ["Glowing"] = true, ["Rainbow"] = true, ["Cosmic"] = true, ["Ghost"] = true} -- Allowed attributes
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local cureAttribute = toggleButton:GetAttribute("Cure")
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                -- Check if Cure is in the allowed list and if pet is not already locked
+                if validCures[cureAttribute] and lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+
+        wait(0) -- Small delay to prevent excessive requests
+    end
+end)
+
+local isRunning = false -- Variable to control the loop
+
+local Toggle = Tabs.Lock:AddToggle("MyToggle", {Title = "Ghost,Rainbow,Cosmic", Default = false })
+
+Toggle:OnChanged(function(state)
+    isRunning = state -- Update the loop control variable
+
+    while isRunning do
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+        local validCures = { ["Ghost"] = true, ["Rainbow"] = true, ["Cosmic"] = true } -- Allowed attributes
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local cureAttribute = toggleButton:GetAttribute("Cure")
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                -- Check if Cure is in the allowed list and if pet is not already locked
+                if validCures[cureAttribute] and lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+
+        wait(0) -- Small delay to prevent excessive requests
+    end
+end)
+
+local isRunning = false -- Variable to control the loop
+
+local Toggle = Tabs.Lock:AddToggle("MyToggle", {Title = "Ghost,Cosmic", Default = false })
+
+Toggle:OnChanged(function(state)
+    isRunning = state -- Update the loop control variable
+
+    while isRunning do
+        local player = game:GetService("Players").LocalPlayer
+        local petsFrame = player.PlayerGui.GameUI.Menus.Inventory.Display.Pets.ScrollingFrame.Pets
+        local petService = game:GetService("ReplicatedStorage"):WaitForChild("Packages", 9e9)
+            :WaitForChild("Knit", 9e9):WaitForChild("Services", 9e9)
+            :WaitForChild("PetService", 9e9):WaitForChild("RF", 9e9)
+            :WaitForChild("updateLocked", 9e9)
+
+        local args = { [1] = {} }
+        local validCures = { ["Ghost"] = true, ["."] = true, ["Cosmic"] = true } -- Allowed attributes
+
+        for _, pet in ipairs(petsFrame:GetChildren()) do
+            local petId = pet.Name
+            local toggleButton = pet:FindFirstChild("Toggle")
+
+            if toggleButton then
+                local cureAttribute = toggleButton:GetAttribute("Cure")
+                local lockPetButton = toggleButton:FindFirstChild("LockPet")
+
+                -- Check if Cure is in the allowed list and if pet is not already locked
+                if validCures[cureAttribute] and lockPetButton and not lockPetButton.Visible then
+                    args[1][petId] = true
+                end
+            end
+        end
+
+        if next(args[1]) then
+            petService:InvokeServer(unpack(args))
+        end
+
+        wait(0) -- Small delay to prevent excessive requests
     end
 end)
