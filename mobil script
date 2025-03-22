@@ -1195,7 +1195,7 @@ local function autoMutatePets()
         local petName = petUI.Name
 
         -- Make sure the pet name exists
-        if petName then
+        if petUI:IsA("Frame") then
             -- Assuming pet names are mapped directly to pet IDs (you may need to adjust this logic if needed)
             local petId = petName  -- Adjust this if necessary to map the pet name to a unique ID
 
@@ -1228,6 +1228,51 @@ Toggle:OnChanged(function()
     else
         -- If toggle is off, stop the loop
         isToggleOn = false
+    end
+end)
+
+local teleportCFrames = {
+    CFrame.new(-10395.6162, 2.01967621, -651.545593,  0.247232601, 0, -0.968954921,  0, 1, 0,  0.968954921, 0, 0.247232601),
+    CFrame.new(-10376.0342, 1.86712646, -666.283752,  0.657927096, 0, 0.753075361,  0, 1, 0,  -0.753075361, 0, 0.657927096)
+}
+
+local Toggle = Tabs.Mutate:AddToggle("MyToggle", {Title = "Auto mutate", Default = false})
+
+local teleporting = false  -- Variable to control teleportation loop
+
+Toggle:OnChanged(function()
+    print("Toggle changed:", Toggle.Value)  -- Use Toggle.Value instead of Options.MyToggle.Value
+
+    -- If toggle is turned on
+    if Toggle.Value then
+        teleporting = true  -- Start teleporting
+        print("Teleporting started.")
+        
+        -- Continuous teleport loop
+        while teleporting do
+            local player = game.Players.LocalPlayer
+            local character = player and (player.Character or player.CharacterAdded:Wait())
+            local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+
+            if humanoidRootPart then
+                -- Teleport to first location
+                humanoidRootPart.CFrame = teleportCFrames[1]
+                print("Teleported to First Location:", teleportCFrames[1].Position)
+
+                -- Wait 2 seconds, then teleport to second location
+                task.wait(1)
+                humanoidRootPart.CFrame = teleportCFrames[2]
+                print("Teleported to Second Location:", teleportCFrames[2].Position)
+                
+                -- Wait 2 seconds, then start again
+                task.wait(1)
+            else
+                warn("HumanoidRootPart not found!")
+            end
+        end
+    else
+        teleporting = false  -- Stop teleporting when toggle is off
+        print("Teleporting stopped.")
     end
 end)
 
@@ -1720,7 +1765,7 @@ end)
 
 
 
-
+--lock
 
 
 
