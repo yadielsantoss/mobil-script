@@ -327,6 +327,40 @@ Toggle:OnChanged(function(state)
     end
 end)
 
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "Bulk Egg", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Bulk", -- Name of the egg
+                    [2] = nil,       -- Placeholder (not used)
+                    [3] = nil,       -- Triple Egg (gamepass)
+                    [4] = false,     -- Auto Egg (gamepass)
+                    [5] = nil,       -- Placeholder (not used)
+                    [6] = true       -- Max egg
+                }
+
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.EggService.RF.purchaseEgg:InvokeServer(unpack(args))
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
 local Toggle = Tabs.New:AddToggle("MyToggle", {Title = "NPC Jolt", Default = false })
 
 local running = false -- Variable to control the loop
