@@ -13,15 +13,43 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-    New = Window:AddTab({ Title = "New", Icon = "" }),
-    Lucifer = Window:AddTab({ Title = "Lucifer part", Icon = "" }),
+    Part3 = Window:AddTab({ Title = "Part3-event", Icon = "" }),
+    New = Window:AddTab({ Title = "Part-1/2", Icon = "" }),
     Iamrich = Window:AddTab({ Title = "Old event", Icon = "" }),
     Mutate = Window:AddTab({ Title = "mutate,cosmic", Icon = "" }),
     Lock = Window:AddTab({ Title = "Lock,Unlock", Icon = "" }),
 }
 
 
-local Toggle = Tabs.Lucifer:AddToggle("STRENGTH", {Title = "boss ManagerMike", Default = false})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "CrystalVillain Egg", Default = false})
 
 local isRunning = false
 
@@ -35,72 +63,7 @@ Toggle:OnChanged(function(state)
             while isRunning do
                 -- Set the arguments for the egg purchase
                 local args = {
-                    [1] = "ManagerMike",
-                    [2] = workspace:WaitForChild("GameObjects"):WaitForChild("ArmWrestling"):WaitForChild("18"):WaitForChild("NPC"):WaitForChild("ManagerMike"):WaitForChild("Table"),
-                    [3] = "18"
-                }
-                
-                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ArmWrestleService"):WaitForChild("RE"):WaitForChild("onEnterNPCTable"):FireServer(unpack(args))
-                
-                -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
-            end
-        end
-    else
-        -- Stop the loop when the toggle is off
-        isRunning = false
-    end
-end)
-
-local Toggle = Tabs.Lucifer:AddToggle("STRENGTH", {Title = "boss Overseer", Default = false})
-
-local isRunning = false
-
--- Listen for the toggle change
-Toggle:OnChanged(function(state)
-    if state then
-        -- Start the loop when the toggle is on
-        if not isRunning then
-            isRunning = true
-            -- Loop while the toggle is on
-            while isRunning do
-                -- Set the arguments for the egg purchase
-                local args = {
-                    [1] = "Overseer",
-                    [2] = workspace:WaitForChild("GameObjects"):WaitForChild("ArmWrestling"):WaitForChild("15"):WaitForChild("NPC"):WaitForChild("Overseer"):WaitForChild("Table"),
-                    [3] = "15"
-                }
-                
-                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ArmWrestleService"):WaitForChild("RE"):WaitForChild("onEnterNPCTable"):FireServer(unpack(args))
-
-                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ArmWrestleService"):WaitForChild("RE"):WaitForChild("onClickRequest"):FireServer()
-
-                -- Sleep for a short period to prevent overwhelming the server
-                wait(0)  -- Adjust the interval as needed
-            end
-        end
-    else
-        -- Stop the loop when the toggle is off
-        isRunning = false
-    end
-end)
-
-
-local Toggle = Tabs.Lucifer:AddToggle("STRENGTH", {Title = "Sport Egg", Default = false})
-
-local isRunning = false
-
--- Listen for the toggle change
-Toggle:OnChanged(function(state)
-    if state then
-        -- Start the loop when the toggle is on
-        if not isRunning then
-            isRunning = true
-            -- Loop while the toggle is on
-            while isRunning do
-                -- Set the arguments for the egg purchase
-                local args = {
-                    [1] = "Sport", -- Name of the egg
+                    [1] = "CrystalVillain", -- Name of the egg
                     [2] = nil,       -- Placeholder (not used)
                     [3] = nil,       -- Triple Egg (gamepass)
                     [4] = false,     -- Auto Egg (gamepass)
@@ -120,7 +83,127 @@ Toggle:OnChanged(function(state)
     end
 end)
 
-local Toggle = Tabs.Lucifer:AddToggle("STRENGTH", {Title = "world 15 wheel", Default = false})
+local Toggle = Tabs.Part3:AddToggle("MyToggle", {Title = "NPC Boombeard", Default = false })
+
+local running = false -- Variable to control the loop
+
+Toggle:OnChanged(function(state) -- 'state' is true if toggle is ON, false if OFF
+    running = state
+
+    if running then
+        local npc = workspace.GameObjects.RngNPCs["VillainCave-Boombeard"]
+        local proximityPrompts = {}
+
+        -- Function to collect ProximityPrompts
+        local function collectProximityPrompts()
+            proximityPrompts = {} -- Reset table to prevent duplicates
+
+            -- Add ProximityPrompts from specific indices (5, 4, 3, 2)
+            local specificIndices = {5, 4, 3, 2}
+            for _, index in ipairs(specificIndices) do
+                local child = npc.Npc:GetChildren()[index]
+                if child and child:FindFirstChild("Table") and child.Table:FindFirstChild("Proximity") and 
+                   child.Table.Proximity:FindFirstChild("Attachment") and 
+                   child.Table.Proximity.Attachment:FindFirstChild("ProximityPrompt") then
+
+                    table.insert(proximityPrompts, child.Table.Proximity.Attachment.ProximityPrompt)
+                end
+            end
+
+            -- Also add all dynamically found ProximityPrompts (in case more exist)
+            for _, child in ipairs(npc.Npc:GetChildren()) do
+                if child:FindFirstChild("Table") and child.Table:FindFirstChild("Proximity") and 
+                   child.Table.Proximity:FindFirstChild("Attachment") and 
+                   child.Table.Proximity.Attachment:FindFirstChild("ProximityPrompt") then
+
+                    table.insert(proximityPrompts, child.Table.Proximity.Attachment.ProximityPrompt)
+                end
+            end
+        end
+
+        -- Function to trigger all found ProximityPrompts
+        local function autoFight()
+            while running do -- Loop only runs while 'running' is true
+                collectProximityPrompts() -- Refresh the ProximityPrompts list
+                if #proximityPrompts > 0 then
+                    for _, prompt in ipairs(proximityPrompts) do
+                        fireproximityprompt(prompt)
+                    end
+                    print("Auto fight triggered!")
+                else
+                    warn("No ProximityPrompts found!")
+                end
+                task.wait(1) -- Adjust delay if needed
+            end
+        end
+
+        -- Start auto-fighting in a new thread
+        task.spawn(autoFight)
+    end
+end)
+
+local Toggle = Tabs.Part3:AddToggle("MyToggle", {Title = "NPC FacelessRecruit", Default = false })
+
+local running = false -- Variable to control the loop
+
+Toggle:OnChanged(function(state) -- 'state' is true if toggle is ON, false if OFF
+    running = state
+
+    if running then
+        local npc = workspace.GameObjects.RngNPCs["VillainCave-FacelessRecruit"]
+        local proximityPrompts = {}
+
+        -- Function to collect ProximityPrompts
+        local function collectProximityPrompts()
+            proximityPrompts = {} -- Reset table to prevent duplicates
+
+            -- Add ProximityPrompts from specific indices (5, 4, 3, 2)
+            local specificIndices = {5, 4, 3, 2}
+            for _, index in ipairs(specificIndices) do
+                local child = npc.Npc:GetChildren()[index]
+                if child and child:FindFirstChild("Table") and child.Table:FindFirstChild("Proximity") and 
+                   child.Table.Proximity:FindFirstChild("Attachment") and 
+                   child.Table.Proximity.Attachment:FindFirstChild("ProximityPrompt") then
+
+                    table.insert(proximityPrompts, child.Table.Proximity.Attachment.ProximityPrompt)
+                end
+            end
+
+            -- Also add all dynamically found ProximityPrompts (in case more exist)
+            for _, child in ipairs(npc.Npc:GetChildren()) do
+                if child:FindFirstChild("Table") and child.Table:FindFirstChild("Proximity") and 
+                   child.Table.Proximity:FindFirstChild("Attachment") and 
+                   child.Table.Proximity.Attachment:FindFirstChild("ProximityPrompt") then
+
+                    table.insert(proximityPrompts, child.Table.Proximity.Attachment.ProximityPrompt)
+                end
+            end
+        end
+
+        -- Function to trigger all found ProximityPrompts
+        local function autoFight()
+            while running do -- Loop only runs while 'running' is true
+                collectProximityPrompts() -- Refresh the ProximityPrompts list
+                if #proximityPrompts > 0 then
+                    for _, prompt in ipairs(proximityPrompts) do
+                        fireproximityprompt(prompt)
+                    end
+                    print("Auto fight triggered!")
+                else
+                    warn("No ProximityPrompts found!")
+                end
+                task.wait(1) -- Adjust delay if needed
+            end
+        end
+
+        -- Start auto-fighting in a new thread
+        task.spawn(autoFight)
+    end
+end)
+
+
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "Crimson Shade Boss", Default = false})
 
 local isRunning = false
 
@@ -134,11 +217,15 @@ Toggle:OnChanged(function(state)
             while isRunning do
                 -- Set the arguments for the egg purchase
                 local args = {
-                    [1] = "Divine Fortune",
-                    [2] = "x25"
+                    [1] = "CrimsonShade",
+                    [2] = workspace:WaitForChild("GameObjects"):WaitForChild("ArmWrestling"):WaitForChild("VillainCave"):WaitForChild("NPC"):WaitForChild("CrimsonShade"):WaitForChild("Table"),
+                    [3] = "VillainCave"
                 }
                 
-                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SpinnerService"):WaitForChild("RF"):WaitForChild("Spin"):InvokeServer(unpack(args))                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ArmWrestleService"):WaitForChild("RE"):WaitForChild("onEnterNPCTable"):FireServer(unpack(args))
+
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ArmWrestleService"):WaitForChild("RE"):WaitForChild("onClickRequest"):FireServer()
+
                 -- Sleep for a short period to prevent overwhelming the server
                 wait(0)  -- Adjust the interval as needed
             end
@@ -149,31 +236,318 @@ Toggle:OnChanged(function(state)
     end
 end)
 
-Tabs.Lucifer:AddButton({
-    Title = "AFK",
-    Description = "AFK",
-    Callback = function()
-        wait(0.5)local ba=Instance.new("ScreenGui")
-        local ca=Instance.new("TextLabel")local da=Instance.new("Frame")
-        local _b=Instance.new("TextLabel")local ab=Instance.new("TextLabel")ba.Parent=game.CoreGui
-        ba.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;ca.Parent=ba;ca.Active=true
-        ca.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ca.Draggable=true
-        ca.Position=UDim2.new(0.698610067,0,0.098096624,0)ca.Size=UDim2.new(0,370,0,52)
-        ca.Font=Enum.Font.SourceSansSemibold;ca.Text="Anti AFK Script"ca.TextColor3=Color3.new(0,1,1)
-        ca.TextSize=22;da.Parent=ca
-        da.BackgroundColor3=Color3.new(0.196078,0.196078,0.196078)da.Position=UDim2.new(0,0,1.0192306,0)
-        da.Size=UDim2.new(0,370,0,107)_b.Parent=da
-        _b.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)_b.Position=UDim2.new(0,0,0.800455689,0)
-        _b.Size=UDim2.new(0,370,0,21)_b.Font=Enum.Font.Arial;_b.Text="made by iamrich "
-        _b.TextColor3=Color3.new(0,1,1)_b.TextSize=20;ab.Parent=da
-        ab.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ab.Position=UDim2.new(0,0,0.158377,0)
-        ab.Size=UDim2.new(0,370,0,44)ab.Font=Enum.Font.ArialBold;ab.Text="Status: Active"
-        ab.TextColor3=Color3.new(0,1,1)ab.TextSize=20;local bb=game:service'VirtualUser'
-        game:service'Players'.LocalPlayer.Idled:connect(function()
-        bb:CaptureController()bb:ClickButton2(Vector2.new())
-        ab.Text="Roblox tried to kick u but i kicked him instead"wait(2)ab.Text="Status : Active"end)
+
+local player = game:GetService("Players").LocalPlayer
+local keysStorage = player.PlayerGui.GameUI.Menus.Items.Display.Items.MainFrame.ScrollingFrame.KeysStorage.Objects
+
+if not Tabs or not Tabs.Part3 then
+    warn("Tabs or Tabs.Part3 is nil. Make sure it is initialized.")
+    return
+end
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "Crimson Fortune", Default = false})
+local isRunning = false
+
+Toggle:OnChanged(function(state)
+    isRunning = state  -- Set running state based on toggle
+    
+    task.spawn(function()
+        while isRunning do
+            wait(1) -- Check every 1 second
+            if keysStorage:FindFirstChild("Crimson Ticket/1") then
+                while isRunning and keysStorage:FindFirstChild("Crimson Ticket/1") do
+                    local args = {
+                        [1] = "Crimson Fortune",
+                        [2] = "x25"
+                    }
+                    
+                    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SpinnerService"):WaitForChild("RF"):WaitForChild("Spin"):InvokeServer(unpack(args))
+                        
+                    wait(0)  -- Adjust the interval as needed
+                end
+            end
+        end
+    end)
+end)
+
+
+local player = game:GetService("Players").LocalPlayer
+local keysStorage = player.PlayerGui.GameUI.Menus.Items.Display.Items.MainFrame.ScrollingFrame.KeysStorage.Objects
+
+if not Tabs or not Tabs.Part3 then
+    warn("Tabs or Tabs.Part3 is nil. Make sure it is initialized.")
+    return
+end
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "VillainChest", Default = false})
+local isRunning = false
+
+Toggle:OnChanged(function(state)
+    isRunning = state  -- Set running state based on toggle
+    
+    task.spawn(function()
+        while isRunning do
+            wait(1) -- Check every 1 second
+            if keysStorage:FindFirstChild("Villain Chest Key/1") then
+                while isRunning and keysStorage:FindFirstChild("Villain Chest Key/1") do
+                    local args = {
+                        [1] = "VillainChest"
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ChestService"):WaitForChild("RF"):WaitForChild("Open"):InvokeServer(unpack(args))
+                    
+                    wait(0)  -- Adjust the interval as needed
+                end
+            end
+        end
+    end)
+end)
+
+local Toggle = Tabs.Iamrich:AddToggle("STRENGTH", {Title = "Villain", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Villain"
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ChampionshipService"):WaitForChild("RF"):WaitForChild("RequestJoin"):InvokeServer(unpack(args))
+                      
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("WrestleService"):WaitForChild("RF"):WaitForChild("OnClick"):InvokeServer()
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
     end
+end)
+
+
+
+Tabs.Part3:AddParagraph({
+    Title = "Train",
+    Content = ""
 })
+
+if not game:GetService("RunService"):IsClient() then
+    return -- Ensures this only runs on the client
+end
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "Dumbells +370%", Default = false})
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then -- Only act when enabled
+        local args = {
+            [1] = "VillainCave",
+            [2] = "Dumbells",
+            [3] = "VillainCave12"
+        }
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("Packages")
+            :WaitForChild("Knit"):WaitForChild("Services")
+            :WaitForChild("ToolService"):WaitForChild("RE")
+            :WaitForChild("onGuiEquipRequest"):FireServer(unpack(args))
+
+            local args = {
+                [1] = workspace:WaitForChild("Zones"):WaitForChild("18"):WaitForChild("Interactables"):WaitForChild("Teleports"):WaitForChild("Locations"):WaitForChild("Spawn")
+            }
+            
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ZoneService"):WaitForChild("RE"):WaitForChild("teleport"):FireServer(unpack(args))
+            
+    end
+end)
+
+if not game:GetService("RunService"):IsClient() then
+    return -- Ensures this only runs on the client
+end
+
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "Auto click", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ToolService"):WaitForChild("RE"):WaitForChild("onClick"):FireServer()
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "knuckle +370%=vip", Default = false})
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then -- Only act when enabled
+        local args = {
+            [1] = workspace:WaitForChild("Zones"):WaitForChild("18"):WaitForChild("Interactables"):WaitForChild("Teleports"):WaitForChild("Locations"):WaitForChild("Spawn")
+        }
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ZoneService"):WaitForChild("RE"):WaitForChild("teleport"):FireServer(unpack(args))
+        
+        local teleportCFrame = CFrame.new(-10314.9609, -45.1976357, 6195.48145, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+        
+        local player = game.Players.LocalPlayer
+        if player and player.Character then
+            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                -- First teleport
+                humanoidRootPart.CFrame = CFrame.new(0, 100, 0) -- Temporary teleport position
+                
+                -- Wait 2 seconds before teleporting to the final position
+                task.wait(2)
+                
+                -- Final teleport
+                humanoidRootPart.CFrame = teleportCFrame
+            end
+        end
+    end
+end)
+
+if not game:GetService("RunService"):IsClient() then
+    return -- Ensures this only runs on the client
+end
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "knuckle +370%=free", Default = false})
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then -- Only act when enabled
+        local args = {
+            [1] = workspace:WaitForChild("Zones"):WaitForChild("18"):WaitForChild("Interactables"):WaitForChild("Teleports"):WaitForChild("Locations"):WaitForChild("Spawn")
+        }
+        
+        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ZoneService"):WaitForChild("RE"):WaitForChild("teleport"):FireServer(unpack(args))
+        
+        local teleportCFrame = CFrame.new(-10314.9609, -45.1976357, 6203.521, -1.1920929e-07, 0, -1.00000012, 0, 1, 0, 1.00000012, 0, -1.1920929e-07)
+        
+        local player = game.Players.LocalPlayer
+        if player and player.Character then
+            local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                -- First teleport
+                humanoidRootPart.CFrame = CFrame.new(0, 100, 0) -- Temporary teleport position
+                
+                -- Wait 2 seconds before teleporting to the final position
+                task.wait(2)
+                
+                -- Final teleport
+                humanoidRootPart.CFrame = teleportCFrame
+            end
+        end
+    end
+end)
+
+if not game:GetService("RunService"):IsClient() then
+    return -- Ensures this only runs on the client
+end
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "Auto click for knuckle=vip", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "VillainCave",
+                    [2] = "VIP",
+                    [3] = true
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("PunchBagService"):WaitForChild("RE"):WaitForChild("onGiveStats"):FireServer(unpack(args))
+                
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+if not game:GetService("RunService"):IsClient() then
+    return -- Ensures this only runs on the client
+end
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "Auto click for knuckle=free", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "VillainCave",
+                    [2] = "Tier6"
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("PunchBagService"):WaitForChild("RE"):WaitForChild("onGiveStats"):FireServer(unpack(args))
+                                
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
