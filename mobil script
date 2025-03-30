@@ -49,7 +49,7 @@ local Tabs = {
 
 
 
-local Toggle = Tabs.New:AddToggle("STRENGTH", {Title = "CrystalVillain Egg", Default = false})
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "CrystalVillain Egg", Default = false})
 
 local isRunning = false
 
@@ -73,6 +73,38 @@ Toggle:OnChanged(function(state)
 
                 game:GetService("ReplicatedStorage").Packages.Knit.Services.EggService.RF.purchaseEgg:InvokeServer(unpack(args))
 
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "Villain trail", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "Villain"
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ChampionshipService"):WaitForChild("RF"):WaitForChild("RequestJoin"):InvokeServer(unpack(args))
+
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("WrestleService"):WaitForChild("RF"):WaitForChild("OnClick"):InvokeServer()
+
+                
                 -- Sleep for a short period to prevent overwhelming the server
                 wait(0)  -- Adjust the interval as needed
             end
