@@ -2816,7 +2816,7 @@ end)
 
 
 --Other
-    local Toggle = Tabs.Other:AddToggle("MyToggle", {Title = "Toggle", Default = false })
+    local Toggle = Tabs.Other:AddToggle("MyToggle", {Title = "Afk", Default = false })
 
     Toggle:OnChanged(function()
     wait(0.5)local ba=Instance.new("ScreenGui")
