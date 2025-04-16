@@ -575,13 +575,13 @@ Toggle:OnChanged(function(state)
     end
 end)
 
-local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "knuckle +370%=vip", Default = false})
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "knuckle +390%=vip", Default = false})
 
 -- Listen for the toggle change
 Toggle:OnChanged(function(state)
     if state then -- Only act when enabled
         local args = {
-            [1] = workspace:WaitForChild("Zones"):WaitForChild("18"):WaitForChild("Interactables"):WaitForChild("Teleports"):WaitForChild("Locations"):WaitForChild("Spawn")
+            [1] = workspace:WaitForChild("Zones"):WaitForChild("19"):WaitForChild("Interactables"):WaitForChild("Teleports"):WaitForChild("Locations"):WaitForChild("Spawn")
         }
         
         game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ZoneService"):WaitForChild("RE"):WaitForChild("teleport"):FireServer(unpack(args))
@@ -609,13 +609,13 @@ if not game:GetService("RunService"):IsClient() then
     return -- Ensures this only runs on the client
 end
 
-local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "knuckle +370%=free", Default = false})
+local Toggle = Tabs.Part3:AddToggle("STRENGTH", {Title = "knuckle +390%=free", Default = false})
 
 -- Listen for the toggle change
 Toggle:OnChanged(function(state)
     if state then -- Only act when enabled
         local args = {
-            [1] = workspace:WaitForChild("Zones"):WaitForChild("18"):WaitForChild("Interactables"):WaitForChild("Teleports"):WaitForChild("Locations"):WaitForChild("Spawn")
+            [1] = workspace:WaitForChild("Zones"):WaitForChild("19"):WaitForChild("Interactables"):WaitForChild("Teleports"):WaitForChild("Locations"):WaitForChild("Spawn")
         }
         
         game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ZoneService"):WaitForChild("RE"):WaitForChild("teleport"):FireServer(unpack(args))
