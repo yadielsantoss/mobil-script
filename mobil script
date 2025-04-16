@@ -16,6 +16,7 @@ local Tabs = {
     Part3 = Window:AddTab({ Title = "Part3-event", Icon = "" }),
     New = Window:AddTab({ Title = "Part-1/2", Icon = "" }),
     Iamrich = Window:AddTab({ Title = "Old event", Icon = "" }),
+    World19 = Window:AddTab({ Title = "World/19", Icon = "" }),
     Mutate = Window:AddTab({ Title = "mutate,cosmic", Icon = "" }),
     Lock = Window:AddTab({ Title = "Lock,Unlock", Icon = "" }),
     Other = Window:AddTab({ Title = "Other", Icon = "" }),
@@ -25,11 +26,149 @@ local Tabs = {
 
 
 
+local Toggle = Tabs.World19:AddToggle("STRENGTH", {Title = "Soul Fire Egg", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "SoulFire", -- Name of the egg
+                    [2] = nil,       -- Placeholder (not used)
+                    [3] = nil,       -- Triple Egg (gamepass)
+                    [4] = false,     -- Auto Egg (gamepass)
+                    [5] = nil,       -- Placeholder (not used)
+                    [6] = true       -- Max egg
+                }
+
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.EggService.RF.purchaseEgg:InvokeServer(unpack(args))
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+local Toggle = Tabs.World19:AddToggle("STRENGTH", {Title = "Soul Dominus Egg", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                local args = {
+                    [1] = "SoulDominus", -- Name of the egg
+                    [2] = nil,       -- Placeholder (not used)
+                    [3] = nil,       -- Triple Egg (gamepass)
+                    [4] = false,     -- Auto Egg (gamepass)
+                    [5] = nil,       -- Placeholder (not used)
+                    [6] = true       -- Max egg
+                }
+
+                game:GetService("ReplicatedStorage").Packages.Knit.Services.EggService.RF.purchaseEgg:InvokeServer(unpack(args))
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
 
 
 
+local Toggle = Tabs.World19:AddToggle("STRENGTH", {Title = "Barbells", Default = false})
 
+local isRunning = false
 
+Toggle:OnChanged(function(state)
+	if state then
+		if not isRunning then
+			isRunning = true
+
+			-- Auto equip only once
+			local player = game:GetService("Players").LocalPlayer
+			local bicepsStat = player:WaitForChild("leaderstats"):WaitForChild("Biceps").Value
+
+			local barbellCheckList = {
+				{name = "MagicCastle3", path = workspace.Zones["19"].Interactables.Training.Barbells.MagicCastle3, index = 3},
+				{name = "MagicCastle2", path = workspace.Zones["19"].Interactables.Training.Barbells.MagicCastle2, index = 2},
+				{name = "MagicCastle1", path = workspace.Zones["19"].Interactables.Training.Barbells.MagicCastle1, index = 1},
+			}
+
+			local selectedBarbell = nil
+
+			for _, barbell in ipairs(barbellCheckList) do
+				local textLabel = barbell.path.HeadStat.Frame.Frame.TextLabel
+				local requiredStr = textLabel.Text
+				local requiredValue = tonumber(requiredStr:match("%d+"))
+
+				if requiredValue and bicepsStat >= requiredValue then
+					selectedBarbell = barbell.name
+					break
+				end
+			end
+
+			if selectedBarbell then
+				local args = {
+					[1] = 19,
+					[2] = "Barbells",
+					[3] = selectedBarbell
+				}
+
+				game:GetService("ReplicatedStorage")
+					:WaitForChild("Packages")
+					:WaitForChild("Knit")
+					:WaitForChild("Services")
+					:WaitForChild("ToolService")
+					:WaitForChild("RE")
+					:WaitForChild("onEquipRequest")
+					:FireServer(unpack(args))
+
+				print("Equipped:", selectedBarbell)
+			else
+				print("Player does not meet the requirement for any MagicCastle barbell.")
+			end
+
+			-- Auto click loop
+			task.spawn(function()
+				while isRunning do
+					game:GetService("ReplicatedStorage")
+						:WaitForChild("Packages")
+						:WaitForChild("Knit")
+						:WaitForChild("Services")
+						:WaitForChild("ToolService")
+						:WaitForChild("RE")
+						:WaitForChild("onClick")
+						:FireServer()
+
+					wait(0) -- adjust delay if needed
+				end
+			end)
+		end
+	else
+		isRunning = false
+	end
+end)
 
 
 
@@ -2812,6 +2951,70 @@ end)
 
 
 
+local Toggle = Tabs.Other:AddToggle("STRENGTH", {Title = "Trainer", Default = false})
+
+local isRunning = false
+
+-- List of crate types
+local crates = {
+    "Starter Crate",
+    "Gold Crate",
+    "Mythic Crate",
+    "Premium Crate",
+    "Prism Crate",
+    "Galaxy Crate"
+}
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                for _, crate in ipairs(crates) do
+                    -- Set the arguments for the crate purchase
+                    local args = { [1] = crate }
+                    -- Invoke the server function to open the crate
+                    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("TrainerService"):WaitForChild("RF"):WaitForChild("OpenCrate"):InvokeServer(unpack(args))
+                    
+                    -- Sleep for a short period to prevent overwhelming the server
+                    wait(0.5)  -- Adjust the interval as needed (e.g., 0.5 seconds between crate openings)
+                end
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
+
+
+local Toggle = Tabs.Other:AddToggle("STRENGTH", {Title = "auto aura", Default = false})
+
+local isRunning = false
+
+-- Listen for the toggle change
+Toggle:OnChanged(function(state)
+    if state then
+        -- Start the loop when the toggle is on
+        if not isRunning then
+            isRunning = true
+            -- Loop while the toggle is on
+            while isRunning do
+                -- Set the arguments for the egg purchase
+                game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("AuraService"):WaitForChild("RF"):WaitForChild("Roll"):InvokeServer()
+
+                -- Sleep for a short period to prevent overwhelming the server
+                wait(0)  -- Adjust the interval as needed
+            end
+        end
+    else
+        -- Stop the loop when the toggle is off
+        isRunning = false
+    end
+end)
 
 
 
